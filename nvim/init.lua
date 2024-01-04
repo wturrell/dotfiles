@@ -69,6 +69,8 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  'tpope/vim-sensible',
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -85,6 +87,9 @@ require('lazy').setup({
 
   -- popup terminal window, as recommended by Jess Archer
   'voldikss/vim-floaterm',
+
+  -- Image viewer (e.g. in Markdown) - only supports PNGs at the moment
+  'edluffy/hologram.nvim',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -338,6 +343,9 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- output current date
+vim.keymap.set({ 'i', 'c' }, '<F3>', "<C-R>=strftime('%Y%m%d')<CR> ")
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -402,9 +410,12 @@ end
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] recently opened files (telescope)' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Existing buffers (telescope)' })
-vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = '[f] fuzzily search by filename' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = 'fuzzily search by filename' })
+vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = 'resume previous telescope search' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = 'telescope live_grep' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = 'telescope help_tags' })
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = 'search recently opened files' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = 'show buffers (searchable)' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -550,7 +561,6 @@ require('which-key').register {
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
@@ -670,14 +680,35 @@ cmp.setup {
   },
 }
 
+require('hologram').setup{
+    auto_display = true -- WIP automatic markdown image display, may be prone to breaking
+}
+
+function HologramTest()
+  local Image = require('hologram.image')
+  local source = vim.fn.expand('~/hologram-test/sample.png')
+  local img = Image:new(source, {})
+  local buf = vim.api.nvim_get_current_buf()
+  img:display(1, 1, buf, {})
+end
+
 -- allows you to type option+3 on Mac keyboard to get a hash sign
 vim.api.nvim_set_keymap('i','<M-3>','#', { noremap=true })
 vim.api.nvim_set_keymap('c','<M-3>','#', { noremap=true })
 
 vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save quickly (saves a keystroke vs :w)' })
 
+vim.o.scrolloff=3
+
+-- set the tab title nicely
+-- source: https://nanotipsforvim.prose.sh/change-vims-window-title
+vim.opt.title = true
+vim.opt.titlelen = 20
+vim.opt.titlestring='v %{expand(\"%:p\")} [%{mode()}]'
+
 -- @todo why doesn't this work?
 --set listchars=tab:▶
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
