@@ -90,6 +90,9 @@ require('lazy').setup({
 
   -- Image viewer (e.g. in Markdown) - only supports PNGs at the moment
   'edluffy/hologram.nvim',
+ 
+  -- text based web browser
+  'yuratomo/w3m.vim',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
