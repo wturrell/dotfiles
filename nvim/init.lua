@@ -120,8 +120,8 @@ require('lazy').setup({
       -- NOTE: if you re-enable these, you also need to comment back 
       -- in some references around lines 620.
   --     -- Snippet Engine & its associated nvim-cmp source
-  --     'L3MON4D3/LuaSnip',
-  --     'saadparwaiz1/cmp_luasnip',
+     'L3MON4D3/LuaSnip',
+     'saadparwaiz1/cmp_luasnip',
   --
   --     -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
@@ -634,9 +634,9 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
--- local luasnip = require 'luasnip'
--- require('luasnip.loaders.from_vscode').lazy_load()
--- luasnip.config.setup {}
+local luasnip = require 'luasnip'
+require('luasnip.loaders.from_vscode').lazy_load()
+luasnip.config.setup {}
 
 cmp.setup {
   snippet = {
