@@ -1,0 +1,12 @@
+# full list of settings: https://github.com/fcambus/ansiweather/blob/master/ansiweatherrc.example
+# no spaces allowed after colons
+location:Canterbury,GB
+show_daylight:true
+symbols:true
+ansi:false
+show_humidity:true
+show_feels_like:true
+humidity_text:RH
+pressure_text:P
+greeting_text: 
+#forecast:5
