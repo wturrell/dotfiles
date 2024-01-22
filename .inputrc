@@ -1,0 +1,4 @@
+# https://unix.stackexchange.com/a/420807/53251
+"\C-l":clear-screen
+"\C-a.":beginning-of-line
+"\C-e.":end-of-line
