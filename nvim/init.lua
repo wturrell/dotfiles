@@ -44,6 +44,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save quickly (saves a keystroke vs :w)' })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -89,10 +91,12 @@ require('lazy').setup({
   'voldikss/vim-floaterm',
 
   -- Image viewer (e.g. in Markdown) - only supports PNGs at the moment
-  'edluffy/hologram.nvim',
+  -- disabled as never using it and occasionally it causes error messages
+  --  'edluffy/hologram.nvim',
 
   -- text based web browser
-  'yuratomo/w3m.vim',
+  -- the fourjay fork is based on (the no-longer maintained) 'yuratomo/w3m.vim',
+  'fourjay/w3m.vim',
 
   {
     "gaoDean/autolist.nvim",
@@ -252,7 +256,7 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.let "g:onedark_config = { 'style': 'dark', 'colors': { 'fg': '#cccccc' } }"
+      vim.cmd.let "g:onedark_config = { 'style': 'dark', 'colors': { 'fg': '#cccccc' }, 'toggle_style_key': '<leader>ts' }"
       vim.cmd.colorscheme 'onedark'
     end,
   },
@@ -579,19 +583,19 @@ local on_attach = function(_, bufnr)
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+--  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
+  -- nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+  -- nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+  -- nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+  -- nmap('<leader>wl', function()
+  -- print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  -- end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -607,7 +611,7 @@ require('which-key').register {
   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+--  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
 }
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
@@ -724,9 +728,9 @@ cmp.setup {
   },
 }
 
-require('hologram').setup{
-    auto_display = true -- WIP automatic markdown image display, may be prone to breaking
-}
+--require('hologram').setup{
+--   auto_display = true -- WIP automatic markdown image display, may be prone to breaking
+--}
 
 function HologramTest()
   local Image = require('hologram.image')
@@ -739,8 +743,6 @@ end
 -- allows you to type option+3 on Mac keyboard to get a hash sign
 vim.api.nvim_set_keymap('i','<M-3>','#', { noremap=true })
 vim.api.nvim_set_keymap('c','<M-3>','#', { noremap=true })
-
-vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save quickly (saves a keystroke vs :w)' })
 
 vim.o.scrolloff=3
 
@@ -756,3 +758,5 @@ vim.opt.titlestring='v %{expand(\"%:p\")} [%{mode()}]'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
+vim.cmd('ab teh the')
+vim.cmd('ab w@ william@wturrell.co.uk')
