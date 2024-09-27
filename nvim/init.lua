@@ -70,6 +70,13 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
+  
+--  'cweagans/vim-taskpaper',
+--  'EVODelavega/vim-eazy-timer',
+
+-- both recommended by :checkhealth which-key
+  { 'echasnovski/mini.nvim', version = false },
+  'nvim-tree/nvim-web-devicons',
 
   'tpope/vim-sensible',
 
@@ -89,6 +96,7 @@ require('lazy').setup({
 
   -- popup terminal window, as recommended by Jess Archer
   'voldikss/vim-floaterm',
+  
 
   -- Image viewer (e.g. in Markdown) - only supports PNGs at the moment
   -- disabled as never using it and occasionally it causes error messages
@@ -391,6 +399,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- output current date
 vim.keymap.set({ 'i', 'c' }, '<F3>', "<C-R>=strftime('%Y%m%d')<CR> ")
+vim.keymap.set({ 'i', 'c' }, '<F4>', "<C-R>=strftime('%-H:%M, %A %-d %B %Y')<CR> ")
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -407,6 +416,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      -- smart-case will search for lower AND upper if you enter a lowercase term
+      '--smart-case',
+    },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -603,22 +622,41 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+local wk = require('which-key')
+wk.add({
+  {"<leader>c", desc = '[C]ode' },
+  {"<leader>d", desc = '[D]ocument' },
+  {"<leader>g", desc = '[G]it' },
+  {"<leader>h", desc = 'Git [H]unk' },
+  {"<leader>s", desc = '[S]earch' },
+  {"<leader>t", desc = '[T]oggle' },
+  {"<leader>w", desc = '[W]orkspace' },
+})
+
 -- document existing key chains
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
---  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
+-- require('which-key').register {
+--   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+--   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+--   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+--   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+--   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+--   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+--   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+-- }
+
+
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
+
+wk.add({
+  { "<leader>", desc = "VISUAL <leader>" },
+  { "<leader>h", desc = "Git [H]unk" }
+})
+
+-- require('which-key').register({
+--   ['<leader>'] = { name = 'VISUAL <leader>' },
+--   ['<leader>h'] = { 'Git [H]unk' },
+-- }, { mode = 'v' })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -739,6 +777,27 @@ function HologramTest()
   local buf = vim.api.nvim_get_current_buf()
   img:display(1, 1, buf, {})
 end
+
+
+-- centers the current pane as the middle 2 of 4 imaginary columns
+-- should be called in a window with a single pane
+-- source: <https://vcavallo.github.io/vim/markdown/how_to/2017/02/28/vim-function-to-visually-center-a-plaintext-file.html>
+-- this is VimScript so putting it in a .lua file requires some changes
+
+-- NB: simpler alternative if using Rectangle on macOS:
+-- `ctrl+opt+;` will give you a 50% centred window for any application
+
+vim.cmd [[
+function! CenterPane()
+ lefta vnew
+ wincmd w
+ exec 'vertical resize '. string(&columns * 0.75)
+endfunction
+
+nnoremap <leader>c :call CenterPane()<cr>
+]]
+        
+
 
 -- allows you to type option+3 on Mac keyboard to get a hash sign
 vim.api.nvim_set_keymap('i','<M-3>','#', { noremap=true })
