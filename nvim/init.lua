@@ -474,6 +474,8 @@ end
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
+-- NB: in ~/.bash_profile, I have aliased `nv` to a command that launches nvim with the telescope 'oldfiles' picker
+
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = 'fuzzily search by filename' })
 vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = 'resume previous telescope search' })
