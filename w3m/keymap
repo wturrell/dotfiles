@@ -1,0 +1,4 @@
+#keymap  L       NEXT
+#keymap  H       PREV
+keymap C-r	MARK
+keymap  \\\r    COMMAND "READ_SHELL 'readable $W3M_URL -p html-title,html-content > /tmp/readable.html' ; LOAD /tmp/readable.html"
