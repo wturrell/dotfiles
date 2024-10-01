@@ -2490,6 +2490,6 @@ map ALT+ESCAPE launch --stdin-source=@screen --stdin-add-formatting --type=overl
 
 
 # BEGIN_KITTY_THEME
-# Adwaita light
+# Adwaita dark
 include current-theme.conf
 # END_KITTY_THEME
