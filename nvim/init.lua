@@ -78,7 +78,18 @@ require('lazy').setup({
   { 'echasnovski/mini.nvim', version = false },
   'nvim-tree/nvim-web-devicons',
 
+--  "f-person/auto-dark-mode.nvim",
+--  opts = {
+--    -- your configuration comes here
+--    -- or leave it empty to use the default settings
+--    -- refer to the configuration section below
+--  },
+
+  'chrisbra/recover.vim',
   'tpope/vim-sensible',
+
+-- Theme meant to work nicely with macOS default terminal
+  'morhetz/gruvbox',
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -90,6 +101,9 @@ require('lazy').setup({
   -- Select a block in visual mode then press 'gc' to comment it out, 
   -- or use 'gcc' for single line.
   'tpope/vim-commentary',
+
+  -- turned this off as it got too annoying. Manual code folding is v. useful though...
+  -- 'masukomi/vim-markdown-folding',
 
   -- file operations; rename files
   'tpope/vim-eunuch',
@@ -105,6 +119,9 @@ require('lazy').setup({
   -- text based web browser
   -- the fourjay fork is based on (the no-longer maintained) 'yuratomo/w3m.vim',
   'fourjay/w3m.vim',
+
+  -- CSV highlighting
+  'mechatroner/rainbow_csv',
 
   {
     "gaoDean/autolist.nvim",
@@ -259,15 +276,16 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.let "g:onedark_config = { 'style': 'dark', 'colors': { 'fg': '#cccccc' }, 'toggle_style_key': '<leader>ts' }"
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
+--  {
+--    -- Theme inspired by Atom
+--    'navarasu/onedark.nvim',
+--    priority = 1000,
+--    config = function()
+--      --vim.cmd.let "g:onedark_config = { 'style': 'light', 'colors': { 'fg': '#ffffff' }, 'toggle_style_key': '<leader>ts' }"
+--      vim.cmd.let "g:onedark_config = { 'style': 'light', 'colors': {}, 'toggle_style_key': '<leader>ts' }"
+--      vim.cmd.colorscheme 'onedark'
+--    end,
+--  },
 
   {
     -- Set lualine as statusline
@@ -276,7 +294,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'gruvbox',
         component_separators = '|',
         section_separators = '',
       },
@@ -379,7 +397,7 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
+--vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
@@ -433,6 +451,9 @@ require('telescope').setup {
       },
     },
   },
+  extensions = {
+    fzf = {}
+  }
 }
 
 -- Enable telescope fzf native, if installed
@@ -705,7 +726,7 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-mason_lspconfig.setup_handlers {
+mason_lspconfig.setup {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
@@ -807,11 +828,14 @@ vim.api.nvim_set_keymap('c','<M-3>','#', { noremap=true })
 
 vim.o.scrolloff=3
 
+if vim.w3m ~= nil then
+  vim.w3m.command = '/opt/homebrew/bin/w3m'
+end
 -- set the tab title nicely
 -- source: https://nanotipsforvim.prose.sh/change-vims-window-title
 vim.opt.title = true
 vim.opt.titlelen = 20
-vim.opt.titlestring='v %{expand(\"%:p\")} [%{mode()}]'
+vim.opt.titlestring='vimr %{expand(\"%:p\")} [%{mode()}]'
 
 -- @todo why doesn't this work?
 --set listchars=tab:▶
@@ -821,3 +845,13 @@ vim.opt.titlestring='v %{expand(\"%:p\")} [%{mode()}]'
 
 vim.cmd('ab teh the')
 vim.cmd('ab w@ william@wturrell.co.uk')
+
+-- allow `gf` to work with files containing spaces
+vim.opt.isfname:append({ '32' })
+
+-- Set the default directory
+--vim.cmd [[
+--autocmd VimEnter * cd ~/icloud-notes/
+--]]
+
+vim.cmd('colorscheme gruvbox')

@@ -1,4 +1,14 @@
+# invalidate defaults
+keymap C-d NULL
+keymap C-u NULL
+
 #keymap  L       NEXT
 #keymap  H       PREV
 keymap C-r	MARK
 keymap  \\\r    COMMAND "READ_SHELL 'readable $W3M_URL -p html-title,html-content > /tmp/readable.html' ; LOAD /tmp/readable.html"
+keymap gd	GOTO https://lite.duckduckgo.com/
+# go to top of file
+keymap gg	BEGIN
+keymap C-d 	NEXT_PAGE
+keymap C-u 	PREV_PAGE
+
